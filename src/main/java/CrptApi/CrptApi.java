@@ -22,7 +22,7 @@ public class CrptApi {
     private Object lock; // для синхронизации (чтобы блокировать доступ из разных потоков)
 
     // Задаем условия и инициализируем
-    private CrptApi (TimeUnit timeUnit, int limrequest){
+    public CrptApi (TimeUnit timeUnit, int limrequest){
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -32,7 +32,7 @@ public class CrptApi {
         this.currentCount = new AtomicInteger();
         this.lock = new Object();
 
-        startSchedilder();
+        startScheduler();
     }
     // Перобразуем запрос в JSON и отправляем
     private void sendDocReq(String signature, Object doc) throws IOException, InterruptedException {
@@ -69,7 +69,7 @@ public class CrptApi {
         }
     }
     // Создаем ограничение для выполнения запросов
-    private void startSchedilder(){
+    private void startScheduler(){
         scheduler.scheduleAtFixedRate(() -> {
             synchronized (lock){
                 currentCount.set(0);
